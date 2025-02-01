@@ -4,9 +4,9 @@
   "description": "big integer library to work in Zq",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --experimental-worker",
+    "test": "node test/index.js",
     "buildwasm": "node tools/buildwasm.js",
-    "build": "node tools/buildwasm.js; browserify main.js -o build/websnark.js --exclude worker_threads --exclude crypto; cp build/websnark.js example/websnark.js"
+    "build": "node tools/buildwasm.js; cd build-tmp && npm ci && npx browserify ../main.js -o ../build/websnark.js --exclude worker_threads --exclude crypto; cp ../build/websnark.js ../example/websnark.js"
   },
   "keywords": [
     "bigint",
@@ -25,16 +25,12 @@
     "url": "https://github.com/iden3/websnark.git"
   },
   "devDependencies": {
-    "browserify": "^16.2.3",
-    "eslint": "^5.14.0",
-    "eslint-plugin-mocha": "^5.3.0",
-    "eslint-plugin-webassembly": "^1.8.4",
-    "mocha": "^6.1.4",
-    "package": "^1.0.1",
-    "snarkjs": "git+https://github.com/peppersec/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
-    "wasmbuilder": "0.0.3"
+    "snarkjs": "git@github.com:DarkFlorist/snarkjs.git#e8a305d593c3f1e5ad8bbe82a2a8044e9113db60",
+    "wasmbuilder": "git@github.com:DarkFlorist/wasmbuilder.git#908030c8e277d62c6ece9bad3d7a42c61af6d5b0",
+    "micro-should": "0.5.1",
+    "@noble/curves": "1.8.1"
   },
   "dependencies": {
-    "big-integer": "^1.6.42"
+    "big-integer": "1.6.43"
   }
 }

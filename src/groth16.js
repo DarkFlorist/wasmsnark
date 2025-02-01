@@ -21,13 +21,13 @@
 const bigInt = require("big-integer");
 const groth16_wasm = require("../build/groth16_wasm.js");
 const assert = require("assert");
+const { randomBytes } = require("@noble/hashes/utils");
+
 
 const inBrowser = (typeof window !== "undefined");
 let NodeWorker;
-let NodeCrypto;
 if (!inBrowser) {
     NodeWorker = require("worker_threads").Worker;
-    NodeCrypto = require("crypto");
 }
 
 
@@ -537,18 +537,10 @@ class Groth16 {
         const pr = this.alloc(32);
         const ps = this.alloc(32);
 
-        if (inBrowser) {
-            window.crypto.getRandomValues(rnd);
-            this.putBin(pr, rnd);
-
-            window.crypto.getRandomValues(rnd);
-            this.putBin(ps, rnd);
-        } else {
-            const br = NodeCrypto.randomBytes(32);
-            this.putBin(pr, br);
-            const bs = NodeCrypto.randomBytes(32);
-            this.putBin(ps, bs);
-        }
+        const br = randomBytes(32);
+        this.putBin(pr, br);
+        const bs = randomBytes(32);
+        this.putBin(ps, bs);
 
         /// Uncoment it to debug and check it works
         //        this.instance.exports.f1m_zero(pr);
