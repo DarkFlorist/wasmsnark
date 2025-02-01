@@ -1,8 +1,6 @@
-const assert = require("assert");
-const refBn128 = require("snarkjs").bn128;
-const refBigInt = require("snarkjs").bigInt;
-
-const buildBn128 = require("../index.js").buildBn128;
+import { describe, it } from 'micro-should';
+import { buildBn128 } from '../index.js';
+import { assert } from './test_utils.js';
 
 describe("FFT tests", () => {
     it("create a basic FFT", async () => {
@@ -22,7 +20,7 @@ describe("FFT tests", () => {
 
         for (let i=0; i<N; i++) {
             const a = bn128.getInt(p+i*32);
-            assert.equal(a,i);
+            assert.equal(a.value,BigInt(i));
         }
     });
 
@@ -43,7 +41,7 @@ describe("FFT tests", () => {
 
         for (let i=0; i<N; i++) {
             const a = bn128.getInt(p+i*32);
-            assert.equal(a,i);
+            assert.equal(a.value,BigInt(i));
         }
     });
     it("test with zeros", async () => {
@@ -63,7 +61,7 @@ describe("FFT tests", () => {
 
         for (let i=0; i<N; i++) {
             const a = bn128.getInt(p+i*32);
-            assert.equal(a,(i%2 == 0)? 0 : 1);
+            assert.equal(a.value,BigInt((i%2 == 0)? 0 : 1));
         }
     });
     it("test interleaved", async () => {
@@ -111,13 +109,14 @@ describe("FFT tests", () => {
         bn128.fft_fromMontgomeryN(pr1, pr1, N*2);
         for (let i=0; i<N; i++) {
             const a = bn128.getInt(pr1+i*32, 1);
-            assert.equal(a,i);
+            assert.equal(a.value,BigInt(i));
         }
         for (let i=N; i<N*2; i++) {
             const a = bn128.getInt(pr1+i*32, 1);
-            assert.equal(a,0);
+            assert.equal(a.value,BigInt(0));
         }
 
     });
 
 });
+it.runWhen(import.meta.url);

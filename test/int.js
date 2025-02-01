@@ -1,25 +1,25 @@
-const assert = require("assert");
-const bigInt = require("big-integer");
-
-const buildProtoboard = require("../src/protoboard.js");
-const buildInt = require("../src/build_int.js");
-const buildTest = require("../src/build_test.js");
-
-const helpers = require("./helpers/helpers.js");
-
+import bigInt from 'big-integer';
+import { describe, it } from 'micro-should';
+import buildInt from '../src/build_int.js';
+import buildTest from '../src/build_test.js';
+import buildProtoboard from '../src/protoboard.js';
+import helpers from './helpers/helpers.js';
+import { assert } from './test_utils.js';
 
 describe("Basic tests for Int", () => {
     let pbInt;
 
-    before(async () => {
+    const init = async () => {
+        if (pbInt) return;
         pbInt = await buildProtoboard((module) => {
             buildInt(module, 4);
             buildTest(module, "int_mul");
             buildTest(module, "int_mulOld");
         }, 32);
-    });
+    };
 
     it("It should do a basic multiplication", async () => {
+        await init();
         let c;
         const pA = pbInt.alloc();
         const pB = pbInt.alloc();
@@ -46,7 +46,7 @@ describe("Basic tests for Int", () => {
     });
 
     it("It should profile int", async () => {
-
+        await init();
         const pA = pbInt.alloc();
         const pB = pbInt.alloc();
         const pC = pbInt.alloc(64);
@@ -79,6 +79,7 @@ describe("Basic tests for Int", () => {
 
         console.log("Mul Old Time (ms): " + time);
 
-    }).timeout(10000000);
+    });
 
 });
+it.runWhen(import.meta.url);
