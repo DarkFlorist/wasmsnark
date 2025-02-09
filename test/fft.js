@@ -61,7 +61,7 @@ describe("FFT tests", () => {
 
         for (let i=0; i<N; i++) {
             const a = bn128.getInt(p+i*32);
-            assert.equal(a.value,BigInt((i%2 == 0)? 0 : 1));
+            assert.equal(a.value,(i%2 == 0) ? 0n : 1n);
         }
     });
     it("test interleaved", async () => {
@@ -113,7 +113,7 @@ describe("FFT tests", () => {
         }
         for (let i=N; i<N*2; i++) {
             const a = bn128.getInt(pr1+i*32, 1);
-            assert.equal(a.value,BigInt(0));
+            assert.equal(a.value,0n);
         }
 
     });
