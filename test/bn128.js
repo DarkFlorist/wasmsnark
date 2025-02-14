@@ -1,8 +1,7 @@
-const assert = require("assert");
-const refBn128 = require("snarkjs").bn128;
-const refBigInt = require("snarkjs").bigInt;
-
-const buildBn128 = require("../index.js").buildBn128;
+import { describe, it } from 'micro-should';
+import { bigInt as refBigInt, bn128 as refBn128 } from 'snarkjs';
+import { buildBn128 } from '../index.js';
+import { assert } from './test_utils.js';
 
 describe("Basic tests for g1 in bn128", () => {
     it("It should do a basic point doubling G1", async () => {
@@ -76,7 +75,7 @@ describe("Basic tests for g1 in bn128", () => {
 
         bn128.g1_fromMontgomery(p1, p1);
 
-        assert(bn128.g1_isZero(p1));
+        assert.equal(1, bn128.g1_isZero(p1));
     });
     it("It should do a test", async () => {
         const bn128 = await buildBn128();
@@ -84,7 +83,7 @@ describe("Basic tests for g1 in bn128", () => {
         const t = bn128.test_AddG1(100000);
 
         console.log(t);
-    }).timeout(10000000);
+    });
     it("It should validate the test", async () => {
         const bn128 = await buildBn128();
         const refD = refBn128.G1.mulScalar(refBn128.g1, 100000);
@@ -102,7 +101,7 @@ describe("Basic tests for g1 in bn128", () => {
 
         assert(refBn128.G1.equals(d, refD));
 
-    }).timeout(10000000);
+    });
     it("It should do a basic point doubling in G2", async () => {
         const bn128 = await buildBn128();
         const refD = refBn128.G2.double(refBn128.g2);
@@ -145,3 +144,4 @@ describe("Basic tests for g1 in bn128", () => {
         assert(refBn128.G2.equals(d, refD));
     });
 });
+it.runWhen(import.meta.url);

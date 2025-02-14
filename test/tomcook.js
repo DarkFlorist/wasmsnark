@@ -1,20 +1,19 @@
-const assert = require("assert");
-const bigInt = require("big-integer");
+import bigInt from 'big-integer';
+import { describe, it } from 'micro-should';
+import buildInt from '../src/build_int.js';
+import buildTomCook from '../src/build_tomcook.js';
 
-const buildProtoboard = require("../src/protoboard.js");
-const buildTomCook = require("../src/build_tomcook.js");
-const buildInt = require("../src/build_int.js");
-const buildTest = require("../src/build_test.js");
-
-const helpers = require("./helpers/helpers.js");
-
-
+import buildTest from '../src/build_test.js';
+import buildProtoboard from '../src/protoboard.js';
+import helpers from './helpers/helpers.js';
+import { assert } from './test_utils.js';
 
 describe("Basic tests for Tom Cook Multiplication Strategy", () => {
     let pbTC;
     let pbInt;
 
-    before(async () => {
+    const init = async () => {
+        if (pbTC) return;
         pbTC = await buildProtoboard((module) => {
             buildTomCook(module);
             buildTest(module, "tomcook_mul9");
@@ -23,9 +22,10 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
             buildInt(module, 4);
             buildTest(module, "int_mul");
         }, 32);
-    });
+    };
 
     it("It should divide by 3 (6)", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc(6*4);
 
@@ -40,6 +40,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
     });
 
     it("It should doubling (6)", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc(6*4);
 
@@ -55,6 +56,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
 
 
     it("It should halving (6)", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc(6*4);
 
@@ -71,6 +73,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
 
 
     it("It should do a basic multiplication 3", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc();
         const pB = pbTC.alloc();
@@ -96,6 +99,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
         }
     });
     it("It should do a basic multiplication 9", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc(9*4);
         const pB = pbTC.alloc(9*4);
@@ -121,6 +125,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
 
 
     it("It should do a basic multiplication Multi values (9)", async () => {
+        await init();
         let c;
         const pA = pbTC.alloc(9*4);
         const pB = pbTC.alloc(9*4);
@@ -150,6 +155,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
 
 
     it("It should profile school", async () => {
+        await init();
         const A = bigInt.one.shiftLeft(254).minus(1);
         const B = bigInt.one.shiftLeft(254).minus(1);
 
@@ -167,8 +173,9 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
         console.log("Refere: " + A.times(B).toString(16));
 
         console.log("Tom School (ms): " + time);
-    }).timeout(10000000);
+    });
     it("It should profile tomCook", async () => {
+        await init();
         let start, end, time;
 //        const A = bigInt.one.shiftLeft(29*3).minus(1);
         const A = bigInt.one.shiftLeft(254).minus(1);
@@ -197,6 +204,7 @@ describe("Basic tests for Tom Cook Multiplication Strategy", () => {
         console.log("Refere: " + A.times(B).toString(16));
 
         console.log("Mul9 Tom Cook Time (ms): " + time);
-    }).timeout(10000000);
+    });
 
 });
+it.runWhen(import.meta.url);

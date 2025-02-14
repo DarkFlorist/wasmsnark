@@ -29,7 +29,7 @@ const buildMultiexp = require("./build_multiexp");
 const buildPol = require("./build_pol");
 const utils = require("./utils");
 
-async function build() {
+async function build(overrideNr = bigInt(7)) {
     const bn128 = new Bn128();
 
     bn128.q = bigInt("21888242871839275222246405745257275088696311157297823662689037894645226208583");
@@ -47,7 +47,8 @@ async function build() {
     buildF1(moduleBuilder, bn128.r, "fr", "frm");
     buildCurve(moduleBuilder, "g1", "f1m");
     buildMultiexp(moduleBuilder, "g1", "g1", "f1m", "fr");
-    buildFFT(moduleBuilder, "fft", "frm", bigInt(7));
+    // IMPORTANT: frm should be 5, but it was set to 7 it commit fba855ab747ad28401ca5a832e187653be72532c
+    buildFFT(moduleBuilder, "fft", "frm", overrideNr);
     buildPol(moduleBuilder, "pol", "frm");
 
     const pNonResidueF2 =  moduleBuilder.alloc(

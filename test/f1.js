@@ -1,10 +1,10 @@
-const assert = require("assert");
-const bigInt = require("big-integer");
-
-const buildF1 = require("../index.js").buildF1;
-const buildF1m = require("../src/build_f1m");
-const buildProtoboard = require("../src/protoboard.js");
-const buildTest = require("../src/build_test.js");
+import bigInt from 'big-integer';
+import { describe, it } from 'micro-should';
+import { buildF1 } from '../index.js';
+import buildF1m from '../src/build_f1m.js';
+import buildTest from '../src/build_test.js';
+import buildProtoboard from '../src/protoboard.js';
+import { assert } from './test_utils.js';
 
 describe("Basic tests for Zq", () => {
     it("It should do a basic addition", async () => {
@@ -16,7 +16,7 @@ describe("Basic tests for Zq", () => {
         f1.f1_add(pA, pB, pC);
 
         const c = f1.getInt(pC);
-        assert.equal(c, 7);
+        assert.equal(c.value, 7n);
     });
     it("Should add with 2 chunks", async () => {
         const f1 = await buildF1(bigInt("100000000000000000001", 16));
@@ -66,7 +66,7 @@ describe("Basic tests for Zq", () => {
         f1.f1_sub(pA, pB, pC);
         const c = f1.getInt(pC);
 
-        assert.equal(c, 2);
+        assert.equal(c.value, 2n);
     });
     it("It should do a basic substraction with negative result", async () => {
         const f1 = await buildF1(101);
@@ -78,7 +78,7 @@ describe("Basic tests for Zq", () => {
         f1.f1_sub(pA, pB, pC);
         const c = f1.getInt(pC);
 
-        assert.equal(c.mod(101), 99);
+        assert.equal(c.mod(101).value, 99n);
     });
     it("Should substract with 2 chunks overflow", async () => {
         const q = bigInt("10000000000000001", 16);
@@ -138,7 +138,7 @@ describe("Basic tests for Zq", () => {
         f1.int_mul(pA, pB, pC);
         const c = f1.getInt2(pC);
 
-        assert.equal(c, 12);
+        assert.equal(c.value, 12n);
     });
 
     it("It should do a basic division", async () => {
@@ -150,7 +150,7 @@ describe("Basic tests for Zq", () => {
         f1.int_div(pA, pB, pC);
 
         const c = f1.getInt(pC);
-        assert.equal(c, 2);
+        assert.equal(c.value, 2n);
     });
     it("It should do a more complex division", async () => {
         const q = bigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
@@ -239,7 +239,7 @@ describe("Basic tests for Zq", () => {
 
         const c = f1.getInt(pC);
 
-        assert.equal(c, 1);
+        assert.equal(c.value, 1n);
     });
     it("It should do a basic reduction 2", async () => {
         const q = bigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
@@ -319,7 +319,7 @@ describe("Basic tests for Zq", () => {
                 f1.putInt(pB, v[j]);
 
                 // eq
-                assert.equal( f1.int_eq(pA,pB), (i==j));
+                assert.equal( f1.int_eq(pA,pB), +(i==j));
 
                 // add
                 f1.f1_add(pA, pB, pC);
@@ -349,7 +349,7 @@ describe("Basic tests for Zq", () => {
 
         console.log(t);
 
-    }).timeout(10000000);
+    });
     it("Should test to montgomery", async () => {
         const q = bigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
         const f1 = await buildF1(q);
@@ -536,6 +536,7 @@ describe("Basic tests for Zq", () => {
 
         console.log("Mul Old Time (ms): " + time);
 
-    }).timeout(10000000);
+    });
 
 });
+it.runWhen(import.meta.url);
